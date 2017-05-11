@@ -3,26 +3,26 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 pygame.init()
-
-screen = pygame.display.set_mode([640, 400])
-
+screen = pygame.display.set_mode([1280, 720])
 pygame.display.set_caption('test game')
 pygame.mouse.set_visible(False)
 clock = pygame.time.Clock()
-
 background_position = [0, 0]
-
 background_image = pygame.image.load("space.jpg").convert()
 player_image = pygame.image.load("player.png").convert()
 player_image.set_colorkey(BLACK)
 
+def change_image():
+    player_image = pygame.image.load("player1.png").convert()
+    
 done = False
 
 while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
-
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            change_image();
     screen.blit(background_image, background_position)
 
     player_position = pygame.mouse.get_pos()
