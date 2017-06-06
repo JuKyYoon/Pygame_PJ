@@ -215,7 +215,7 @@ class TetrisApp(object):
             self.screen.fill((0,0,0))
             if not self.gameover:
                 if self.paused:
-                    self.center_msg("Paused")
+                    self.center_msg("")
                 else:
                     self.draw_matrix(self.board, (0,0))
                     self.draw_matrix(self.stone,(self.stone_x, self.stone_y))
