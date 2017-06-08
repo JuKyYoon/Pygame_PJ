@@ -2,10 +2,10 @@ from random import randrange as rand
 import pygame, sys
 
 # The configuration
-cell_size = 18
-cols =      10
-rows =      22
-maxfps =    30
+cell_size = 20
+cols =      18
+rows =      50
+maxfps =    100
 
 colors = [
 (0,   0,   0  ),
@@ -78,9 +78,10 @@ class TetrisApp(object):
     def __init__(self):
         pygame.init()
         pygame.key.set_repeat(250,25)
-        self.width = cell_size*(cols+6)
+        self.width = cell_size*(cols+6) - 120
         self.height = cell_size*rows
         self.rlim = cell_size*cols
+        # self.rlim = 0
         self.bground_grid = [[ 8 if x%2==y%2 else 0 for x in range(cols)] for y in range(rows)]
         self.default_font =  pygame.font.Font(pygame.font.get_default_font(), 12)
         self.screen = pygame.display.set_mode((self.width, self.height))
@@ -103,7 +104,7 @@ class TetrisApp(object):
         self.level = 1
         self.score = 0
         self.lines = 0
-        pygame.time.set_timer(pygame.USEREVENT+1, 1000)
+        pygame.time.set_timer(pygame.USEREVENT+1, 100)
     
     def disp_msg(self, msg, topleft):
         x,y = topleft
@@ -135,8 +136,7 @@ class TetrisApp(object):
         self.score += linescores[n] * self.level
         if self.lines >= self.level*6:
             self.level += 1
-            newdelay = 1000-50*(self.level-1)
-            newdelay = 100 if newdelay < 100 else newdelay
+            newdelay = 100
             pygame.time.set_timer(pygame.USEREVENT+1, newdelay)
     
     def move(self, delta_x):
@@ -217,6 +217,7 @@ class TetrisApp(object):
                 if self.paused:
                     self.center_msg("")
                 else:
+                    self.draw_matrix(self.bground_grid, (0,0))
                     self.draw_matrix(self.board, (0,0))
                     self.draw_matrix(self.stone,(self.stone_x, self.stone_y))
             pygame.display.update()

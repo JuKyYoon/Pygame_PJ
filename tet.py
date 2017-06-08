@@ -72,6 +72,7 @@ class Tetris(object):
 
     def new_stone(self):
         self.stone = self.next_stone[:]
+        self,next_sto
     def init_game(self):
         self.board = draw_board()
 
@@ -86,7 +87,7 @@ class Tetris(object):
             self.stone_y += 1
             if check_collision(self.board, self.stone, (self.stone_x, self.stone_y)):
                 self.board = join_matrixes(self.board, self.stone)
-                self.new
+                self.new_stone()
 
     def draw_matrix(self, matrix):
         for y, row in enumerate(matrix):
