@@ -5,7 +5,7 @@ import pygame, sys
 cell_size = 20
 cols =      18
 rows =      35
-maxfps =    30
+maxfps =    35
 
 colors = [
 (0,   0,   0  ),
@@ -75,12 +75,13 @@ def new_board():
     return board
 
 class TetrisApp(object):
-    def __init__(self):
-        pygame.init()
+    def __init__(self,width,height,rlim):
+
         pygame.key.set_repeat(250,25)
-        self.width = cell_size*(cols+6) - 120
-        self.height = cell_size*rows
-        self.rlim = cell_size*cols
+        self.width = width
+        self.height = height
+        self.rlim = rlim
+
         # self.rlim = 0
         self.bground_grid = [[ 8 if x%2==y%2 else 0 for x in range(cols)] for y in range(rows)]
         self.default_font =  pygame.font.Font(pygame.font.get_default_font(), 12)
@@ -128,7 +129,7 @@ class TetrisApp(object):
         for y, row in enumerate(matrix):
             for x, val in enumerate(row):
                 if val:
-                    pygame.draw.rect(self.screen,colors[val],pygame.Rect( (off_x+x) * cell_size, (off_y+y) * cell_size, cell_size,cell_size),0)
+                    pygame.draw.rect(self.screen, colors[val], pygame.Rect( (off_x+x) * cell_size + 1, (off_y+y) * cell_size +1, cell_size -1 ,cell_size -1 ),0)
 
     def draw_background(self,matrix,offset):
         off_x, off_y  = offset
@@ -240,6 +241,19 @@ class TetrisApp(object):
                             key_actions[key]()
             dont_burn_my_cpu.tick(maxfps)
 
+
+class Menu(object):
+    def __init__(self):
+        pygame.init()
+        self.width = cell_size*(cols+6) - 120
+        self.height = cell_size*rows
+        self.rlim = cell_size*cols
+        self.tetris_start()
+
+
+    def tetris_start(self):
+        App = TetrisApp(self.width,self.height,self.rlim)
+        App.run()
+
 if __name__ == '__main__':
-    App = TetrisApp()
-    App.run()
+    game = Menu()
