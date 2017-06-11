@@ -5,7 +5,7 @@ import pygame, sys
 cell_size = 20
 cols =      18
 rows =      35
-maxfps =    35
+maxfps =    60
 
 colors = [
 (0,   0,   0  ),
@@ -78,7 +78,7 @@ class TetrisApp(object):
     def __init__(self,width,height,rlim):
 
         pygame.key.set_repeat(250,25)
-        self.width = width
+        self.width = width + 120
         self.height = height
         self.rlim = rlim
 
@@ -95,6 +95,7 @@ class TetrisApp(object):
         self.next_stone = tetris_shapes[rand(len(tetris_shapes))]
         self.stone_x = int(cols / 2 - len(self.stone[0])/2)
         self.stone_y = 0
+        self.stone_y_shadow = 0
 
         if check_collision(self.board,self.stone,(self.stone_x, self.stone_y)):
             self.gameover = True
@@ -105,7 +106,7 @@ class TetrisApp(object):
         self.level = 1
         self.score = 0
         self.lines = 0
-        pygame.time.set_timer(pygame.USEREVENT+1, 500)
+        pygame.time.set_timer(pygame.USEREVENT+1, 1000)
 
     def disp_msg(self, msg, topleft):
         x,y = topleft
@@ -143,8 +144,8 @@ class TetrisApp(object):
         self.lines += n
         self.score += linescores[n] * self.level
         if self.lines >= self.level*6:
-            self.level += 1
-            newdelay = self.level + 100
+            newdelay = 1000-50*(self.level-1)
+            newdelay = 100 if newdelay < 100 else newdelay
             pygame.time.set_timer(pygame.USEREVENT+1, newdelay)
 
     def move(self, delta_x):
@@ -181,6 +182,23 @@ class TetrisApp(object):
                 self.add_cl_lines(cleared_rows)
                 return True
         return False
+
+
+    def shadow(self, manual):
+        
+        if not self.gameover and not self.paused:
+            self.stone_y_shadow += 1
+            if check_collision(self.board, self.stone,(self.stone_x, self.stone_y_shadow)):
+                self.stone_y_shadow -= 1
+                return True
+        return False
+
+    def shadow_drop(self):
+        if not self.gameover and not self.paused:
+            self.stone_y_shadow = 0
+            while(not self.shadow(True)):
+                pass
+
 
     def insta_drop(self):
         if not self.gameover and not self.paused:
@@ -221,18 +239,30 @@ class TetrisApp(object):
         dont_burn_my_cpu = pygame.time.Clock()
         while 1:
             self.screen.fill((0,0,0))
-            if not self.gameover:
+            if self.gameover:
+                self.center_msg("""Game Over!\nYour score: %d
+# Press ENTER to continue""" % self.score)
+            else:
                 if self.paused:
-                    self.center_msg("SPACE")
+                    self.center_msg("Paused")
                 else:
                     self.draw_background(self.bground_grid, (0,0))
+                    self.disp_msg("Next:", (self.rlim+cell_size,2))
+                    self.disp_msg("Score: %d\n\nLevel: %d\n\nLines: %d" % (self.score, self.level, self.lines),(self.rlim+cell_size, cell_size*5))
+                    self.disp_msg("backspace:quit \n p : pause", (self.rlim+cell_size,200))
                     self.draw_matrix(self.board, (0,0))
                     self.draw_matrix(self.stone,(self.stone_x, self.stone_y))
+                    print(self.stone_y, self.stone_y_shadow)
+                    self.draw_matrix(self.stone,(self.stone_x,self.stone_y_shadow))
+                    self.draw_matrix(self.next_stone,(cols+1,2))
+
             pygame.display.update()
 
             for event in pygame.event.get():
                 if event.type == pygame.USEREVENT+1:
+                    
                     self.drop(False)
+                    self.shadow_drop()
                 elif event.type == pygame.QUIT:
                     self.quit()
                 elif event.type == pygame.KEYDOWN:
