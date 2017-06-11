@@ -264,10 +264,14 @@ class TetrisApp(object):
                     # self.draw_background(self.bground_grid, (0,0))
                     now = datetime.datetime.now()
                     nowTime = now.strftime('%H:%M:%S')
+                    pygame.draw.line(self.screen,
+                        (255,255,255),
+                        (self.rlim+1, 0),
+                        (self.rlim+1, self.height-1))
                     self.disp_msg("Next:", (self.rlim+cell_size,2))
                     
                     self.disp_msg("Score: %d\n\nLevel: %d\n\nLines: %d" % (self.score, self.level, self.lines),(self.rlim+cell_size, cell_size*5))
-                    self.disp_msg("backspace:quit \n p : pause", (self.rlim+cell_size,200))
+                    self.disp_msg("backspace:quit \n p : pause \n space : quick", (self.rlim+cell_size,200))
                     self.disp_msg(nowTime, (self.rlim+cell_size,650))
                     print(self.stone_y_shadow)
                     self.draw_matrix(self.board, (0,0))
