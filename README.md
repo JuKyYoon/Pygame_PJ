@@ -2,6 +2,7 @@
 
 
 ### 소개 : pygame을 이용한 테트리스 게임 
+![게임화면](https://github.com/JuKyYoon/Pygame_PJ/blob/master/Honeycam%202017-06-12%2000-09-12.gif)
 
 - 배경 : 검정색
 
