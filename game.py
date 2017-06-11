@@ -199,7 +199,7 @@ class TetrisApp(object):
         if not self.gameover and not self.paused:
             self.stone_y_shadow += 1
             if check_collision(self.board, self.stone,(self.stone_x, self.stone_y_shadow)):
-                self.stone_y_shadow -= 1
+                
                 return True
         return False
 
@@ -208,6 +208,10 @@ class TetrisApp(object):
             self.stone_y_shadow = 0
             while(not self.shadow(True)):
                 pass
+        self.stone_y_shadow -= 1
+
+        if(self.stone_y_shadow < self.stone_y):
+            self.stone_y_shadow = self.stone_y
 
 
     def insta_drop(self):
@@ -264,7 +268,7 @@ class TetrisApp(object):
                     self.disp_msg("Score: %d\n\nLevel: %d\n\nLines: %d" % (self.score, self.level, self.lines),(self.rlim+cell_size, cell_size*5))
                     self.disp_msg("backspace:quit \n p : pause", (self.rlim+cell_size,200))
                     self.disp_msg(nowTime, (self.rlim+cell_size,650))
-                    
+                    print(self.stone_y_shadow)
                     self.draw_matrix(self.board, (0,0))
                     self.draw_shadow(self.stone,(self.stone_x,self.stone_y_shadow))
                     self.draw_matrix(self.stone,(self.stone_x, self.stone_y))
@@ -275,7 +279,7 @@ class TetrisApp(object):
             for event in pygame.event.get():
                 if event.type == pygame.USEREVENT+1:
                     self.drop(False)
-                    
+                    self.shadow_drop()
                 elif event.type == pygame.QUIT:
                     self.quit()
                 elif event.type == pygame.KEYDOWN:
