@@ -159,6 +159,8 @@ class TetrisApp(object):
                 self.stone_x = new_x
 
 
+
+
     def quit(self):
         pygame.display.update()
         sys.exit()
@@ -183,6 +185,9 @@ class TetrisApp(object):
                 return True
         return False
 
+    def shadow_sync(self, x):
+        self.move(x)
+        self.shadow_drop()
 
     def shadow(self, manual):
         
@@ -224,8 +229,8 @@ class TetrisApp(object):
     def run(self):
         key_actions = {
             'BACKSPACE':   self.quit,
-            'LEFT':     lambda:self.move(-1),
-            'RIGHT':    lambda:self.move(+1),
+            'LEFT':     lambda:self.shadow_sync(-1),
+            'RIGHT':    lambda:self.shadow_sync(+1),
             'DOWN':     lambda:self.drop(True),
             'UP':       self.rotate_stone,
             'p':        self.toggle_pause,
@@ -269,6 +274,7 @@ class TetrisApp(object):
                     for key in key_actions:
                         if event.key == eval("pygame.K_"+key):
                             key_actions[key]()
+                    self.shadow_drop()
             dont_burn_my_cpu.tick(maxfps)
 
 
