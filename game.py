@@ -8,6 +8,7 @@ cols =      18
 rows =      35
 maxfps =    60
 
+
 colors = [
 (0,   0,   0  ),
 (255, 85,  85),
