@@ -1,5 +1,6 @@
 from random import randrange as rand
 import pygame, sys
+import datetime
 
 # The configuration
 cell_size = 20
@@ -132,6 +133,13 @@ class TetrisApp(object):
                 if val:
                     pygame.draw.rect(self.screen, colors[val], pygame.Rect( (off_x+x) * cell_size + 1, (off_y+y) * cell_size +1, cell_size -1 ,cell_size -1 ),0)
 
+    def draw_shadow(self, matrix, offset):
+        off_x, off_y  = offset
+        for y, row in enumerate(matrix):
+            for x, val in enumerate(row):
+                if val:
+                    pygame.draw.rect(self.screen, (50,50,50), pygame.Rect( (off_x+x) * cell_size + 1, (off_y+y) * cell_size +1, cell_size -1 ,cell_size -1 ),0)
+
     def draw_background(self,matrix,offset):
         off_x, off_y  = offset
         for y, row in enumerate(matrix):
@@ -185,9 +193,6 @@ class TetrisApp(object):
                 return True
         return False
 
-    def shadow_sync(self, x):
-        self.move(x)
-        self.shadow_drop()
 
     def shadow(self, manual):
         
@@ -229,8 +234,8 @@ class TetrisApp(object):
     def run(self):
         key_actions = {
             'BACKSPACE':   self.quit,
-            'LEFT':     lambda:self.shadow_sync(-1),
-            'RIGHT':    lambda:self.shadow_sync(+1),
+            'LEFT':     lambda:self.move(-1),
+            'RIGHT':    lambda:self.move(+1),
             'DOWN':     lambda:self.drop(True),
             'UP':       self.rotate_stone,
             'p':        self.toggle_pause,
@@ -251,23 +256,26 @@ class TetrisApp(object):
                 if self.paused:
                     self.center_msg("Paused")
                 else:
-                    self.draw_background(self.bground_grid, (0,0))
+                    # self.draw_background(self.bground_grid, (0,0))
+                    now = datetime.datetime.now()
+                    nowTime = now.strftime('%H:%M:%S')
                     self.disp_msg("Next:", (self.rlim+cell_size,2))
+                    
                     self.disp_msg("Score: %d\n\nLevel: %d\n\nLines: %d" % (self.score, self.level, self.lines),(self.rlim+cell_size, cell_size*5))
                     self.disp_msg("backspace:quit \n p : pause", (self.rlim+cell_size,200))
+                    self.disp_msg(nowTime, (self.rlim+cell_size,650))
+                    
                     self.draw_matrix(self.board, (0,0))
+                    self.draw_shadow(self.stone,(self.stone_x,self.stone_y_shadow))
                     self.draw_matrix(self.stone,(self.stone_x, self.stone_y))
-                    print(self.stone_y, self.stone_y_shadow)
-                    self.draw_matrix(self.stone,(self.stone_x,self.stone_y_shadow))
                     self.draw_matrix(self.next_stone,(cols+1,2))
 
             pygame.display.update()
 
             for event in pygame.event.get():
                 if event.type == pygame.USEREVENT+1:
-                    
                     self.drop(False)
-                    self.shadow_drop()
+                    
                 elif event.type == pygame.QUIT:
                     self.quit()
                 elif event.type == pygame.KEYDOWN:
