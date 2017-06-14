@@ -2,9 +2,9 @@
 
 
 ### 소개 : pygame을 이용한 테트리스 게임
-![게임화면](https://github.com/JuKyYoon/Pygame_PJ/blob/master/Honeycam%202017-06-12%2000-09-12.gif)
+![게임화면](https://github.com/JuKyYoon/Pygame_PJ/blob/master/ingame.gif)
 
-![배경화면변경]()
+![배경화면변경](https://github.com/JuKyYoon/Pygame_PJ/blob/master/change_Color.gif)
 
 
 
@@ -18,7 +18,8 @@
 
 - 폰트 : MKX Title
 
-
+- 실행법
+        python game.py
 ### 기능
 
 - 메뉴
