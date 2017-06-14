@@ -1,14 +1,14 @@
 from random import randrange as rand
 import pygame, sys
 import datetime
+import random
 
 # The configuration
 cell_size = 20
 cols =      20
 full =       0
-rows =      50
+rows =      40
 maxfps =    60
-BGCOLOR = (0,0,0)
 
 colors = [
 (0,   0,   0  ),
@@ -34,6 +34,10 @@ BLUE        = (  0,   0, 255)
 LIGHTBLUE   = ( 51, 255, 255)
 PUPPLE      = (153,   0, 204)
 SHADOW      = (130, 130, 130)
+DARKBLUE = (20,16,97)
+
+
+BGCOLOR = BLACK
 
 tetris_shapes = [
     [[1, 1, 1],
@@ -100,9 +104,9 @@ def dumbmenu(screen, menu, x_pos = 100, y_pos = 100, font = None,
 	# Draw the Menupoints
 	pygame.font.init()
 	if font == None:
-		myfont = pygame.font.Font(None, size)
+		myfont = pygame.font.Font('MKX Title.ttf', size)
 	else:
-		myfont = pygame.font.SysFont(font, size)
+		myfont = pygame.font.SysFont('MKX Title.ttf', size)
 	cursorpos = 0
 	renderWithChars = False
 	for i in menu:
@@ -288,13 +292,13 @@ class TetrisApp(object):
     def disp_msg(self, msg, topleft):
         x,y = topleft
         for line in msg.splitlines():
-            self.screen.blit(self.default_font.render(line,True,(255,255,255),(0,0,0)),(x,y))
+            self.screen.blit(self.default_font.render(line,True,(255,255,255),BGCOLOR),(x,y))
             y+=10
 
     def center_msg(self, msg):
         for i, line in enumerate(msg.splitlines()):
             msg_image =  self.default_font.render(line, False,
-                (255,255,255), (0,0,0))
+                (255,255,255), BGCOLOR)
 
             msgim_center_x, msgim_center_y = msg_image.get_size()
             msgim_center_x //= 2
@@ -317,11 +321,16 @@ class TetrisApp(object):
                     pygame.draw.rect(self.screen, SHADOW, pygame.Rect( (off_x+x) * cell_size , (off_y+y) * cell_size, cell_size  ,cell_size  ),0)
 
     def draw_background(self,matrix,offset):
+        global BGCOLOR
+        if BGCOLOR == BLACK:
+            c = GRAY
+        else:
+            c = BLACK
         off_x, off_y  = offset
         for y, row in enumerate(matrix):
             for x, val in enumerate(row):
                 if val:
-                    pygame.draw.rect(self.screen,(50,50,50),pygame.Rect( (off_x+x) * cell_size, (off_y+y) * cell_size, cell_size,cell_size),0)
+                    pygame.draw.rect(self.screen,c,pygame.Rect( (off_x+x) * cell_size, (off_y+y) * cell_size, cell_size,cell_size),0)
 
     def add_cl_lines(self, n):
         linescores = [0, 40, 100, 300, 1200]
@@ -412,7 +421,7 @@ class TetrisApp(object):
 
     def return_menu(self):
         pygame.display.update()
-        
+
         new_game = Menu()
 
 
@@ -435,7 +444,7 @@ class TetrisApp(object):
 
         dont_burn_my_cpu = pygame.time.Clock()
         while 1:
-            self.screen.fill((0,0,0))
+            self.screen.fill(BGCOLOR)
             if self.gameover:
                 self.center_msg("""Game Over!\nYour score: %d # Press ENTER to continue""" % self.score)
             else:
@@ -504,18 +513,30 @@ class Menu(object):
 
 
     def main(self):
-        self.screen.fill((0,0,0))
+        global full
+        global BGCOLOR
+        self.screen.fill(BGCOLOR)
         pygame.display.update()
+
+        if BGCOLOR == BLACK:
+            color_text ='Black'
+        else:
+            color_text ='Dark Blue'
+
+        if full == 1:
+            screen_state = 'Full Screen'
+        else:
+            screen_state = 'Windowed'
         choose = dumbmenu(self.screen, [
                             'Start Game',
-                            'FULL',
-                            'Quit'], 160,250,None,30,1.4)
+                            str(screen_state),
+                            'COLOR : ' + str(color_text),
+                            'Quit'], 170,250,None,30,0.5)
 
         if choose == 0:
             self.tetris_start()
 
-        if choose == 1:
-            global full
+        elif choose == 1:
 
             if full==1:
                 self.screen = pygame.display.set_mode((self.width, self.height))
@@ -524,6 +545,13 @@ class Menu(object):
             else:
                 self.screen = pygame.display.set_mode((self.width, self.height),pygame.FULLSCREEN)
                 full = 1
+            self.main()
+
+        elif choose == 2:
+            if BGCOLOR == BLACK:
+                BGCOLOR = DARKBLUE
+            else:
+                BGCOLOR = BLACK
             self.main()
 
         else :
