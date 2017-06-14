@@ -4,10 +4,9 @@ import datetime
 
 # The configuration
 cell_size = 20
-cols =      18
-rows =      35
+cols =      50
+rows =      50
 maxfps =    60
-
 
 colors = [
 (0,   0,   0  ),
@@ -42,7 +41,6 @@ tetris_shapes = [
     [[7, 7],
      [7, 7]]
 ]
-
 def rotate_clockwise(shape):
     return [ [ shape[y][x]
             for y in range(len(shape)) ]
@@ -76,19 +74,181 @@ def new_board():
     board += [[ 1 for x in range(cols)]]
     return board
 
-class TetrisApp(object):
-    def __init__(self,width,height,rlim):
 
-        pygame.key.set_repeat(250,25)
-        self.width = width + 120
+def dumbmenu(screen, menu, x_pos = 100, y_pos = 100, font = None,
+            size = 70, distance = 1.4, fgcolor = (255,255,255),
+            cursorcolor = (255,0,0), exitAllowed = True):
+
+
+
+
+	# Draw the Menupoints
+	pygame.font.init()
+	if font == None:
+		myfont = pygame.font.Font(None, size)
+	else:
+		myfont = pygame.font.SysFont(font, size)
+	cursorpos = 0
+	renderWithChars = False
+	for i in menu:
+		if renderWithChars == False:
+			text =  myfont.render(str(cursorpos + 1)+".  " + i,
+				True, fgcolor)
+		else:
+			text =  myfont.render(chr(char)+".  " + i,
+				True, fgcolor)
+			char += 1
+		textrect = text.get_rect()
+		textrect = textrect.move(x_pos,
+		           (size // distance * cursorpos) + y_pos)
+		screen.blit(text, textrect)
+		pygame.display.update(textrect)
+		cursorpos += 1
+		if cursorpos == 9:
+			renderWithChars = True
+			char = 65
+
+	# Draw the ">", the Cursor
+	cursorpos = 0
+	cursor = myfont.render(">", True, cursorcolor)
+	cursorrect = cursor.get_rect()
+	cursorrect = cursorrect.move(x_pos - (size // distance),
+	             (size // distance * cursorpos) + y_pos)
+
+	# The whole While-loop takes care to show the Cursor, move the
+	# Cursor and getting the Keys (1-9 and A-Z) to work...
+	ArrowPressed = True
+	exitMenu = False
+	clock = pygame.time.Clock()
+	filler = pygame.Surface.copy(screen)
+	fillerrect = filler.get_rect()
+	while True:
+		clock.tick(30)
+		if ArrowPressed == True:
+			screen.blit(filler, fillerrect)
+			pygame.display.update(cursorrect)
+			cursorrect = cursor.get_rect()
+			cursorrect = cursorrect.move(x_pos - (size // distance),
+			             (size // distance * cursorpos) + y_pos)
+			screen.blit(cursor, cursorrect)
+			pygame.display.update(cursorrect)
+			ArrowPressed = False
+		if exitMenu == True:
+			break
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				return -1
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_ESCAPE and exitAllowed == True:
+					if cursorpos == len(menu) - 1:
+						exitMenu = True
+					else:
+						cursorpos = len(menu) - 1; ArrowPressed = True
+
+
+				# This Section is huge and ugly, I know... But I don't
+				# know a better method for this^^
+				if event.key == pygame.K_1:
+					cursorpos = 0; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_2 and len(menu) >= 2:
+					cursorpos = 1; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_3 and len(menu) >= 3:
+					cursorpos = 2; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_4 and len(menu) >= 4:
+					cursorpos = 3; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_5 and len(menu) >= 5:
+					cursorpos = 4; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_6 and len(menu) >= 6:
+					cursorpos = 5; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_7 and len(menu) >= 7:
+					cursorpos = 6; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_8 and len(menu) >= 8:
+					cursorpos = 7; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_9 and len(menu) >= 9:
+					cursorpos = 8; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_a and len(menu) >= 10:
+					cursorpos = 9; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_b and len(menu) >= 11:
+					cursorpos = 10; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_c and len(menu) >= 12:
+					cursorpos = 11; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_d and len(menu) >= 13:
+					cursorpos = 12; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_e and len(menu) >= 14:
+					cursorpos = 13; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_f and len(menu) >= 15:
+					cursorpos = 14; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_g and len(menu) >= 16:
+					cursorpos = 15; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_h and len(menu) >= 17:
+					cursorpos = 16; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_i and len(menu) >= 18:
+					cursorpos = 17; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_j and len(menu) >= 19:
+					cursorpos = 18; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_k and len(menu) >= 20:
+					cursorpos = 19; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_l and len(menu) >= 21:
+					cursorpos = 20; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_m and len(menu) >= 22:
+					cursorpos = 21; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_n and len(menu) >= 23:
+					cursorpos = 22; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_o and len(menu) >= 24:
+					cursorpos = 23; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_p and len(menu) >= 25:
+					cursorpos = 24; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_q and len(menu) >= 26:
+					cursorpos = 25; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_r and len(menu) >= 27:
+					cursorpos = 26; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_s and len(menu) >= 28:
+					cursorpos = 27; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_t and len(menu) >= 29:
+					cursorpos = 28; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_u and len(menu) >= 30:
+					cursorpos = 29; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_v and len(menu) >= 31:
+					cursorpos = 30; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_w and len(menu) >= 32:
+					cursorpos = 31; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_x and len(menu) >= 33:
+					cursorpos = 32; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_y and len(menu) >= 34:
+					cursorpos = 33; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_z and len(menu) >= 35:
+					cursorpos = 34; ArrowPressed = True; exitMenu = True
+				elif event.key == pygame.K_UP:
+					ArrowPressed = True
+					if cursorpos == 0:
+						cursorpos = len(menu) - 1
+					else:
+						cursorpos -= 1
+				elif event.key == pygame.K_DOWN:
+					ArrowPressed = True
+					if cursorpos == len(menu) - 1:
+						cursorpos = 0
+					else:
+						cursorpos += 1
+				elif event.key == pygame.K_KP_ENTER or \
+				     event.key == pygame.K_RETURN:
+							exitMenu = True
+
+	return cursorpos
+
+
+class TetrisApp(object):
+    def __init__(self,width,height,rlim,screen,default_font):
+
+        self.width = width
         self.height = height
         self.rlim = rlim
+        self.default_font = default_font
+        self.screen = screen
 
         # self.rlim = 0
         self.bground_grid = [[ 8 if x%2==y%2 else 0 for x in range(cols)] for y in range(rows)]
-        self.default_font =  pygame.font.Font(pygame.font.get_default_font(), 12)
-        self.screen = pygame.display.set_mode((self.width, self.height))
-        pygame.event.set_blocked(pygame.MOUSEMOTION)
+
         self.next_stone = tetris_shapes[rand(len(tetris_shapes))]
         self.init_game()
 
@@ -113,8 +273,8 @@ class TetrisApp(object):
     def disp_msg(self, msg, topleft):
         x,y = topleft
         for line in msg.splitlines():
-            self.screen.blit(self.default_font.render(line,False,(255,255,255),(0,0,0)),(x,y))
-            y+=14
+            self.screen.blit(self.default_font.render(line,True,(255,255,255),(0,0,0)),(x,y))
+            y+=10
 
     def center_msg(self, msg):
         for i, line in enumerate(msg.splitlines()):
@@ -196,11 +356,10 @@ class TetrisApp(object):
 
 
     def shadow(self, manual):
-        
         if not self.gameover and not self.paused:
             self.stone_y_shadow += 1
             if check_collision(self.board, self.stone,(self.stone_x, self.stone_y_shadow)):
-                
+
                 return True
         return False
 
@@ -236,9 +395,16 @@ class TetrisApp(object):
             self.init_game()
             self.gameover = False
 
+    def return_menu(self):
+        pygame.display.update()
+
+        new_game = Menu()
+
+
+
     def run(self):
         key_actions = {
-            'BACKSPACE':   self.quit,
+            'BACKSPACE':   self.return_menu,
             'LEFT':     lambda:self.move(-1),
             'RIGHT':    lambda:self.move(+1),
             'DOWN':     lambda:self.drop(True),
@@ -255,8 +421,7 @@ class TetrisApp(object):
         while 1:
             self.screen.fill((0,0,0))
             if self.gameover:
-                self.center_msg("""Game Over!\nYour score: %d
-# Press ENTER to continue""" % self.score)
+                self.center_msg("""Game Over!\nYour score: %d # Press ENTER to continue""" % self.score)
             else:
                 if self.paused:
                     self.center_msg("Paused")
@@ -269,11 +434,12 @@ class TetrisApp(object):
                         (self.rlim+1, 0),
                         (self.rlim+1, self.height-1))
                     self.disp_msg("Next:", (self.rlim+cell_size,2))
-                    
+
                     self.disp_msg("Score: %d\n\nLevel: %d\n\nLines: %d" % (self.score, self.level, self.lines),(self.rlim+cell_size, cell_size*5))
                     self.disp_msg("backspace:quit \n p : pause \n space : quick", (self.rlim+cell_size,200))
                     self.disp_msg(nowTime, (self.rlim+cell_size,650))
-                    print(self.stone_y_shadow)
+
+                    # print(self.stone_y_shadow)
                     self.draw_matrix(self.board, (0,0))
                     self.draw_shadow(self.stone,(self.stone_x,self.stone_y_shadow))
                     self.draw_matrix(self.stone,(self.stone_x, self.stone_y))
@@ -298,15 +464,46 @@ class TetrisApp(object):
 class Menu(object):
     def __init__(self):
         pygame.init()
-        self.width = cell_size*(cols+6) - 120
+        icon = pygame.image.load('image.png')
+        pygame.display.set_icon(icon)
+
+        self.width = cell_size*(cols+6)
         self.height = cell_size*rows
         self.rlim = cell_size*cols
-        self.tetris_start()
+
+        pygame.key.set_repeat(250,25)
+        self.default_font =  pygame.font.Font('MKX Title.ttf', 16)
+
+        self.screen = pygame.display.set_mode((self.width, self.height))
+        # self.screen = pygame.display.set_mode((self.width, self.height),pygame.FULLSCREEN)
+
+        pygame.event.set_blocked(pygame.MOUSEMOTION)
+
+        self.main()
+
+
+    def main(self):
+        self.screen.fill((0,0,0))
+        pygame.display.update()
+        choose = dumbmenu(self.screen, [
+                            'Start Game',
+                            'Quit'], 160,250,None,30,1.4)
+
+        if choose == 0:
+            self.tetris_start()
+
+        else :
+            pygame.quit()
+            sys.exit()
 
 
     def tetris_start(self):
-        App = TetrisApp(self.width,self.height,self.rlim)
+        App = TetrisApp(self.width,self.height,self.rlim,self.screen,self.default_font)
         App.run()
+
+
+
+
 
 if __name__ == '__main__':
     game = Menu()
