@@ -4,9 +4,11 @@ import datetime
 
 # The configuration
 cell_size = 20
-cols =      50
+cols =      20
+full =       0
 rows =      50
 maxfps =    60
+BGCOLOR = (0,0,0)
 
 colors = [
 (0,   0,   0  ),
@@ -19,6 +21,19 @@ colors = [
 (150, 161, 218 ),
 (35,  35,  35) #
 ]
+
+#               R    G    B
+WHITE       = (255, 255, 255)
+GRAY        = ( 50,  50,  50)
+BLACK       = (  0,   0,   0)
+RED         = (255,   0,   0)
+ORANGE      = (255, 153,   0)
+YELLOW      = (255, 255,   0)
+GREEN       = ( 51, 255,  51)
+BLUE        = (  0,   0, 255)
+LIGHTBLUE   = ( 51, 255, 255)
+PUPPLE      = (153,   0, 204)
+SHADOW      = (130, 130, 130)
 
 tetris_shapes = [
     [[1, 1, 1],
@@ -299,7 +314,7 @@ class TetrisApp(object):
         for y, row in enumerate(matrix):
             for x, val in enumerate(row):
                 if val:
-                    pygame.draw.rect(self.screen, (50,50,50), pygame.Rect( (off_x+x) * cell_size + 1, (off_y+y) * cell_size +1, cell_size -1 ,cell_size -1 ),0)
+                    pygame.draw.rect(self.screen, SHADOW, pygame.Rect( (off_x+x) * cell_size , (off_y+y) * cell_size, cell_size  ,cell_size  ),0)
 
     def draw_background(self,matrix,offset):
         off_x, off_y  = offset
@@ -397,8 +412,9 @@ class TetrisApp(object):
 
     def return_menu(self):
         pygame.display.update()
-
+        
         new_game = Menu()
+
 
 
 
@@ -426,7 +442,7 @@ class TetrisApp(object):
                 if self.paused:
                     self.center_msg("Paused")
                 else:
-                    # self.draw_background(self.bground_grid, (0,0))
+                    self.draw_background(self.bground_grid, (0,0))
                     now = datetime.datetime.now()
                     nowTime = now.strftime('%H:%M:%S')
                     pygame.draw.line(self.screen,
@@ -474,10 +490,15 @@ class Menu(object):
         pygame.key.set_repeat(250,25)
         self.default_font =  pygame.font.Font('MKX Title.ttf', 16)
 
-        self.screen = pygame.display.set_mode((self.width, self.height))
+        global full
+        if full == 0:
+            self.screen = pygame.display.set_mode((self.width, self.height))
+        else:
+            self.screen = pygame.display.set_mode((self.width, self.height),pygame.FULLSCREEN)
         # self.screen = pygame.display.set_mode((self.width, self.height),pygame.FULLSCREEN)
 
         pygame.event.set_blocked(pygame.MOUSEMOTION)
+
 
         self.main()
 
@@ -487,10 +508,23 @@ class Menu(object):
         pygame.display.update()
         choose = dumbmenu(self.screen, [
                             'Start Game',
+                            'FULL',
                             'Quit'], 160,250,None,30,1.4)
 
         if choose == 0:
             self.tetris_start()
+
+        if choose == 1:
+            global full
+
+            if full==1:
+                self.screen = pygame.display.set_mode((self.width, self.height))
+                full = 0
+
+            else:
+                self.screen = pygame.display.set_mode((self.width, self.height),pygame.FULLSCREEN)
+                full = 1
+            self.main()
 
         else :
             pygame.quit()
