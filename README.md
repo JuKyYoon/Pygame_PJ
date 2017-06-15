@@ -1,5 +1,5 @@
 # Tetris
-
+forked from [silvasur/tetris.py](https://gist.github.com/silvasur/565419)
 
 ### 소개 : pygame을 이용한 테트리스 게임
 ![게임화면](https://github.com/JuKyYoon/Pygame_PJ/blob/master/ingame.gif)
