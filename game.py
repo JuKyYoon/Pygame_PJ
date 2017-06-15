@@ -336,10 +336,10 @@ class TetrisApp(object):
         linescores = [0, 40, 100, 300, 1200]
         self.lines += n
         self.score += linescores[n] * self.level
-        if self.lines >= self.level*6:
-            newdelay = 1000-50*(self.level-1)
-            newdelay = 100 if newdelay < 100 else newdelay
-            pygame.time.set_timer(pygame.USEREVENT+1, newdelay)
+        # if self.lines >= self.level*6:
+        #     newdelay = 1000-50*(self.level-1)
+        #     newdelay = 100 if newdelay < 100 else newdelay
+        #     pygame.time.set_timer(pygame.USEREVENT+1, newdelay)
 
     def move(self, delta_x):
         if not self.gameover and not self.paused:
@@ -362,6 +362,13 @@ class TetrisApp(object):
         if not self.gameover and not self.paused:
             self.score += 1 if manual else 0
             self.stone_y += 1
+            if self.score  > self.level * 1000:
+                self.level+=1
+            newdelay = 1000 - (self.level * 50)
+            if newdelay <50:
+                newdelay = 20
+
+            pygame.time.set_timer(pygame.USEREVENT+1,newdelay)
             if check_collision(self.board, self.stone,(self.stone_x, self.stone_y)):
                 self.board = join_matrixes(self.board, self.stone, (self.stone_x, self.stone_y))
                 self.new_stone()
