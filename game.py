@@ -335,6 +335,8 @@ class TetrisApp(object):
     def add_cl_lines(self, n):
         linescores = [0, 40, 100, 300, 1200]
         self.lines += n
+        if n > 4:
+            n = 4
         self.score += linescores[n] * self.level
         # if self.lines >= self.level*6:
         #     newdelay = 1000-50*(self.level-1)
