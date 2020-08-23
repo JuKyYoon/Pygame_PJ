@@ -1,29 +1,29 @@
 # Tetris
 forked from [silvasur/tetris.py](https://gist.github.com/silvasur/565419)
 
-### 소개 : pygame을 이용한 테트리스 게임
-![게임화면](https://github.com/JuKyYoon/Pygame_PJ/blob/master/ingame.gif)
+### Introduction : Tetris using Pygame
+![GamePlay](https://github.com/JuKyYoon/Pygame_PJ/blob/master/ingame.gif)
 
-![배경화면변경](https://github.com/JuKyYoon/Pygame_PJ/blob/master/change_Color.gif)
+![Change a Background](https://github.com/JuKyYoon/Pygame_PJ/blob/master/change_Color.gif)
 
 
 
-- 창 크기 : 820 * 360 (OR FULLSCREEN)
+- Resolution (창 크기) : 820 * 360 / FULLSCREEN
 
-- 7가지 블럭
 
-- 60프레임
+- Seven Blocks
 
-- 블럭 구분선
+- 60 FPS
 
-- 폰트 : MKX Title
+- Block contour
 
-- 실행법
-        python game.py
+- Font : MKX Title
+
+- How to play : ``` python game.py ```
 
 ### 기능
 
-- 메뉴
+- Menu
 > 1. 게임시작
 > 2. 창모드 변경
 > 3. 배경색 변경
